@@ -4,3 +4,14 @@ services:
     image: microfrontend-hilla/eureka-app
     build: eureka-app
     stop_signal: SIGINT
+  gateway-app:
+    image: microfrontend-hilla/gateway-app
+    build: gateway-app
+    stop_signal: SIGINT
+    environment:
+    - SPRING_EUREKA_HOST=eureka-app
+    depends_on:
+      eureka-app:
+        condition: service_healthy
+    ports:
+     - "8080:8080"
