@@ -3,10 +3,43 @@ spring:
         name: gateway-app
     cloud:
         gateway:
+            httpserver:
+                wiretap: true
+            httpclient:
+                wiretap: true
+            default-filters:
+            - RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,
             discovery:
                 locator:
                     enabled: true
+                    lower-case-service-id: true
+                    predicates:
+                    - name: Path
+                      args:
+                        pattern: "'/_apps/' + serviceId + '/**'"
+                    filters:
+                    - name: RewritePath
+                      args:
+                        regexp: "'/_apps/' + serviceId + '/?(?<remaining>.*)'"
+                        replacement: "'/${remaining}'"                        
+            routes:
+            - id: default-route
+              uri: lb://portal-app
+              predicates:
+              - Path=/**
+            forwarded:
+                enabled: true
+            x-forwarded:
+                enabled: true
+server:
+    port: ${PORT:8080}
 eureka:
     client:
         serviceUrl:
-            defaultZone: ${EUREKA_SERVICE_URL}
+            defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+        register-with-eureka: false
+logging:
+    level:
+        "[org.springframework.cloud.gateway]": DEBUG
+        "[reactor.netty]": DEBUG
+
