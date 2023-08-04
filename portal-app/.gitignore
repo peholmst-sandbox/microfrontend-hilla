@@ -1,0 +1,5 @@
+target/
+config/secrets/
+node_modules/
+frontend/generated/
+vite.generated.ts
