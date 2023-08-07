@@ -4,8 +4,22 @@ import { UserConfigFn } from 'vite';
 import { overrideVaadinConfig } from './vite.generated';
 
 const customConfig: UserConfigFn = (env) => ({
-  // Here you can add custom Vite parameters
-  // https://vitejs.dev/config/
+  build: {
+    target: 'esnext',
+  },
+  plugins: [
+    federation({
+      name: 'hillamicro-portal-app',
+      remotes: {
+        components: '/_apps/components/assets/components-container.js'
+      },
+      shared: {
+        'lit-html': { version: '2.7.6' },
+        'lit': { version: '2.7.6' },
+        'lit-element': { version: '2.7.6' },
+      },
+    }),
+  ],
 });
 
 export default overrideVaadinConfig(customConfig);

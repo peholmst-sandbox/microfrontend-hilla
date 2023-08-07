@@ -1,18 +1,10 @@
-// TODO These imports will have to be handled through a component bundle
-
-import '@vaadin/app-layout';
-import '@vaadin/app-layout/vaadin-drawer-toggle';
-import '@vaadin/icon';
-import '@vaadin/icons';
-import '@vaadin/scroller';
-import '@vaadin/side-nav';
-import '@vaadin/side-nav/vaadin-side-nav-item';
-import '@vaadin/vaadin-lumo-styles/vaadin-iconset';
-
 import { appStore } from '../stores/app-store';
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { Layout } from './view';
+
+//@ts-ignore
+import('components/all.js');
 
 interface RouteInfo {
     path: string;

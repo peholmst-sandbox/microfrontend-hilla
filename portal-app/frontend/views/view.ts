@@ -1,5 +1,4 @@
 import { MobxLitElement } from '@adobe/lit-mobx';
-import { applyTheme } from 'Frontend/generated/theme.js';
 import { autorun, IAutorunOptions, IReactionDisposer, IReactionOptions, IReactionPublic, reaction } from 'mobx';
 
 export class MobxElement extends MobxLitElement {
@@ -64,8 +63,4 @@ export class View extends MobxElement {
  * The layout class also bring the MobX dependency for state management.
  */
 export class Layout extends MobxElement {
-  connectedCallback(): void {
-    super.connectedCallback();
-    applyTheme(this.shadowRoot as ShadowRoot);
-  }
 }
