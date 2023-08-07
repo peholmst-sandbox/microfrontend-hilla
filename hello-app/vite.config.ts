@@ -14,11 +14,13 @@ const customConfig: UserConfigFn = (env) => ({
       exposes: {
         './hello-app': './frontend/hello-app.ts',
       },
+      remotes: {
+        components: '/_apps/components/assets/components-container.js'
+      },
       shared: {
-        '@vaadin/vaadin-lumo-styles': {},
-         'lit-html': {},
-         'lit': {},
-         'lit-element': {},
+        'lit-html': { version: '2.7.6' },
+        'lit': { version: '2.7.6' },
+        'lit-element': { version: '2.7.6' },
       },
     }),
   ],
