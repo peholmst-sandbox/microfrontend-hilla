@@ -1,0 +1,1 @@
+import './people-app.js';
