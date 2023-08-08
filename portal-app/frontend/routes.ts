@@ -35,6 +35,14 @@ export const views: ViewRoute[] = [
 
 export const routes: Route[] = [
     {
+        path: 'login',
+        component: 'login-view',
+        action: async (_context, _command) => {
+            await import('./views/login/login-view.js');
+            return;
+        },
+    },
+    {
         path: '',
         component: 'main-layout',
         children: views,

@@ -3,6 +3,8 @@ package org.vaadin.petter.hillamicro.hello.endpoints;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
@@ -19,5 +21,15 @@ public class ServerTimeEndpoint {
 
     public @Nonnull LocalDateTime getServerTime() {
         return LocalDateTime.now();
+    }
+
+    public @Nonnull String getServerUser() {
+        var context = SecurityContextHolder.getContext();
+        var auth = context.getAuthentication();
+        if (auth == null) {
+            return "n/a";
+        } else {
+            return auth.getName();
+        }
     }
 }

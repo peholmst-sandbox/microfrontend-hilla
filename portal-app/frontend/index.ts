@@ -5,7 +5,7 @@ import { appStore } from './stores/app-store';
 import('./application-tracker');
 
 export const router = new Router(document.querySelector('#outlet'));
-router.setRoutes(routes, document.location.pathname !== '/');
+router.setRoutes(routes);
 
 window.addEventListener('vaadin-router-location-changed', (e) => {
     appStore.setLocation((e as CustomEvent).detail.location);

@@ -16,7 +16,6 @@ class DiscoveryClientApplicationInfoProvider implements ApplicationInfoProvider 
     private static final String METADATA_ICON = "microfrontend.icon";
     private static final String METADATA_PATH = "microfrontend.path";
     private static final String METADATA_IMPORT_PATH = "microfrontend.importPath";
-    private static final String METADATA_REQUIRES_AUTHENTICATION = "microfrontend.requiresAuthentication";
     private static final String METADATA_TAG = "microfrontend.tag";
     private static final String METADATA_MODULE_NAME = "microfrontend.moduleName";
 
@@ -46,10 +45,9 @@ class DiscoveryClientApplicationInfoProvider implements ApplicationInfoProvider 
         var path = Optional.ofNullable(serviceInstance.getMetadata().get(METADATA_PATH)).orElse("/" + serviceInstance.getServiceId().toLowerCase());
         var icon = Optional.ofNullable(serviceInstance.getMetadata().get(METADATA_ICON)).orElse("");
         var importPath = serviceInstance.getMetadata().get(METADATA_IMPORT_PATH);
-        var requiresAuthentication = Boolean.parseBoolean(serviceInstance.getMetadata().getOrDefault(METADATA_REQUIRES_AUTHENTICATION, "true"));
         var tag = Optional.ofNullable(serviceInstance.getMetadata().get(METADATA_TAG)).orElse(serviceInstance.getServiceId().toLowerCase());
         var moduleName = Optional.ofNullable(serviceInstance.getMetadata().get(METADATA_MODULE_NAME)).orElse("./" + tag);
-        return new ApplicationInfo(serviceInstance.getServiceId(), title, path, icon, importPath, tag, moduleName, requiresAuthentication);
+        return new ApplicationInfo(serviceInstance.getServiceId(), title, path, icon, importPath, tag, moduleName);
     }
 
 }

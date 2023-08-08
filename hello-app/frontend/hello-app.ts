@@ -14,6 +14,9 @@ export class HelloApp extends LitElement {
     serverTime: string = '<fetching>';
 
     @state()
+    serverUser: string = '<fetching>';
+
+    @state()
     subscribedServerTime: string = '';
 
     @state()
@@ -22,12 +25,14 @@ export class HelloApp extends LitElement {
     async connectedCallback(): Promise<void> {
         super.connectedCallback();
         this.serverTime = await ServerTimeEndpoint.getServerTime();
+        this.serverUser = await ServerTimeEndpoint.getServerUser();
     }
 
     render() {
         return html`
             <h1>Hello World (with time)!</h1>
             <div>Server time when opening view: ${this.serverTime}</div>
+            <div>Server user when opening view: ${this.serverUser}</div>
             <div>
                 ${this.sub
                 ? html`

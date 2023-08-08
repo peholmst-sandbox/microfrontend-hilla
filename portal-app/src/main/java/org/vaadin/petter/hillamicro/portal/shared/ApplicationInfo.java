@@ -12,8 +12,7 @@ public record ApplicationInfo(
         @Nullable String icon,
         @Nonnull String importPath,
         @Nonnull String tag,
-        @Nonnull String moduleName,
-        boolean requiresAuthentication) {
+        @Nonnull String moduleName) {
 
     public ApplicationInfo {
         requireNonNull(applicationId, "applicationId must not be null");
