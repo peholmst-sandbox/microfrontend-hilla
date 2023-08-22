@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: frontend-a
+  devtools:
+    restart:
+      additional-exclude: dev/hilla/openapi.json
+server:
+  port: ${PORT:8083}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+  instance:
+    metadata-map:
+      frontend.title: Frontend A
+
+
+vaadin:
+  whitelisted-packages: com.vaadin,org.vaadin,dev.hilla
