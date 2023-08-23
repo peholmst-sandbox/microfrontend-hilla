@@ -8,6 +8,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
 import reactor.core.publisher.Flux;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,6 +31,7 @@ public class PortalShellEndpoint {
                 .flatMap(serviceId -> discoveryClient.getInstances(serviceId).stream().findFirst().stream())
                 .filter(this::isFrontend)
                 .map(this::serviceInstanceToFrontend)
+                .sorted(Comparator.comparing(Frontend::frontendId))
                 .toList();
     }
 

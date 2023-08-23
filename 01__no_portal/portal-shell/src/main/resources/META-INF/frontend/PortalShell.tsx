@@ -15,9 +15,14 @@ interface PortalShellProps {
 export default function PortalShell(props: PortalShellProps) {
     const initialFrontends: Frontend[] = [];
     const [frontends, setFrontends] = useState(initialFrontends);
+    const [selfFrontendId, setSelfFrontendId] = useState("");
     useEffect(() => {
-        PortalShellEndpoint.getFrontends().then(result => {
-            setFrontends(result);
+        PortalShellEndpoint.getFrontends().then(frontends => {
+            setFrontends(frontends);
+            PortalShellEndpoint.getSelf().then(self => {
+                setSelfFrontendId(self.frontendId);
+                window.name = self.frontendId;
+            });
         });
     }, []);
 
@@ -30,8 +35,8 @@ export default function PortalShell(props: PortalShellProps) {
                 </h3>
                 <Tabs slot="drawer" orientation="vertical">
                     {frontends.map(frontend => (
-                        <Tab>
-                            <a tabIndex={-1} target={"_blank"} href={frontend.url}>
+                        <Tab selected={frontend.frontendId === selfFrontendId}>
+                            <a tabIndex={-1} target={frontend.frontendId} href={frontend.url}>
                                 <span>{frontend.title}</span>
                             </a>
                         </Tab>
