@@ -18,10 +18,16 @@ public class PortalShellEndpoint {
 
     private final DiscoveryClient discoveryClient;
     private final Environment environment;
+    private final FrontendNotificationSender frontendNotificationSender;
+    private final FrontendNotificationReceiver frontendNotificationReceiver;
 
-    public PortalShellEndpoint(DiscoveryClient discoveryClient, Environment environment) {
+    public PortalShellEndpoint(DiscoveryClient discoveryClient, Environment environment,
+                               FrontendNotificationSender frontendNotificationSender,
+                               FrontendNotificationReceiver frontendNotificationReceiver) {
         this.discoveryClient = Objects.requireNonNull(discoveryClient);
         this.environment = Objects.requireNonNull(environment);
+        this.frontendNotificationSender = Objects.requireNonNull(frontendNotificationSender);
+        this.frontendNotificationReceiver = Objects.requireNonNull(frontendNotificationReceiver);
     }
 
     public @Nonnull List<@Nonnull Frontend> getFrontends() {
@@ -57,10 +63,12 @@ public class PortalShellEndpoint {
     }
 
     public void pushNotification(@Nonnull NotificationPriority priority, @Nonnull String message) {
-        throw new UnsupportedOperationException("not implemented yet");
+        var self = getSelf();
+        var notification = new FrontendNotification(self.frontendId(), self.url(), priority, message);
+        frontendNotificationSender.send(notification);
     }
 
     public @Nonnull Flux<@Nonnull FrontendNotification> getNotifications() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return frontendNotificationReceiver.notifications();
     }
 }
