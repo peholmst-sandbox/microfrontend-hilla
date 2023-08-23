@@ -5,6 +5,7 @@ import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EurekaServiceInstance;
 import org.springframework.core.env.Environment;
 import reactor.core.publisher.Flux;
 
@@ -48,12 +49,13 @@ public class PortalShellEndpoint {
     private Frontend serviceInstanceToFrontend(ServiceInstance serviceInstance) {
         var frontendId = serviceInstance.getServiceId();
         var title = serviceInstance.getMetadata().getOrDefault("frontend.title", frontendId);
-        var url = serviceInstance.getUri().toString();
+        var url = serviceInstance instanceof EurekaServiceInstance eurekaServiceInstance ? eurekaServiceInstance.getInstanceInfo().getHomePageUrl() : serviceInstance.getUri().toString();
         var iconUrl = serviceInstance.getMetadata().get("frontend.icon");
         return new Frontend(frontendId, title, url, iconUrl);
     }
 
     public @Nonnull Frontend getSelf() {
+        // TODO This will result in an exception if called before the registration with Eureka is complete.
         var frontendId = environment.getRequiredProperty("spring.application.name");
         return discoveryClient.getInstances(frontendId)
                 .stream()

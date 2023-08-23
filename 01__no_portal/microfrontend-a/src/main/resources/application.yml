@@ -6,6 +6,8 @@ spring:
       additional-exclude: dev/hilla/openapi.json
 server:
   port: ${PORT:8083}
+  servlet:
+    context-path: /frontend-a/
 eureka:
   client:
     service-url:
@@ -13,7 +15,9 @@ eureka:
   instance:
     metadata-map:
       frontend.title: Frontend A
+    home-page-url: ${HOME_PAGE_URL:http://localhost:8080/frontend-a/}
 
 
 vaadin:
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla
+

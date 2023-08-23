@@ -1,8 +1,7 @@
 import {ReactNode, useEffect, useState} from "react";
 import {AppLayout} from '@hilla/react-components/AppLayout.js';
 import {DrawerToggle} from '@hilla/react-components/DrawerToggle.js';
-import {Tabs} from '@hilla/react-components/Tabs.js';
-import {Tab} from '@hilla/react-components/Tab.js';
+import {VerticalLayout} from '@hilla/react-components/VerticalLayout.js';
 import {Subscription} from '@hilla/frontend';
 import {Notification} from '@hilla/react-components/Notification.js';
 
@@ -24,12 +23,13 @@ export default function PortalShell(props: PortalShellProps) {
     const [notification, setNotification] = useState<FrontendNotification | undefined>();
 
     useEffect(() => {
-        PortalShellEndpoint.getFrontends().then(frontends => {
-            setFrontends(frontends);
-        });
         PortalShellEndpoint.getSelf().then(self => {
             setSelfFrontendId(self.frontendId);
+            console.log(`Setting window name to ${self.frontendId}`);
             window.name = self.frontendId;
+            PortalShellEndpoint.getFrontends().then(frontends => {
+                setFrontends(frontends);
+            });
         });
         setSubscription(PortalShellEndpoint.getNotifications().onNext((notification) => {
             setNotification(notification);
@@ -56,15 +56,13 @@ export default function PortalShell(props: PortalShellProps) {
                 <h3 slot="navbar">
                     {props.title}
                 </h3>
-                <Tabs slot="drawer" orientation="vertical">
+                <VerticalLayout slot="drawer" theme={"spacing padding"}>
                     {frontends.map(frontend => (
-                        <Tab selected={frontend.frontendId === selfFrontendId}>
-                            <a tabIndex={-1} target={frontend.frontendId} href={frontend.url}>
-                                <span>{frontend.title}</span>
-                            </a>
-                        </Tab>
+                        <a tabIndex={-1} target={frontend.frontendId} href={frontend.url}>
+                            <span>{frontend.title}</span>
+                        </a>
                     ))}
-                </Tabs>
+                </VerticalLayout>
                 {props.children}
             </AppLayout>
         </>
