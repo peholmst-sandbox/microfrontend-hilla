@@ -4,6 +4,8 @@ spring:
   devtools:
     restart:
       additional-exclude: dev/hilla/openapi.json
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
 server:
   port: ${PORT:8083}
   servlet:

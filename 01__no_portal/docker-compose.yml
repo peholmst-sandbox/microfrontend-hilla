@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3
+  eureka:
+    image: hillamicro/noportal/eureka
+    build: ../eureka-app
+    stop_signal: SIGINT
+  gateway:
+    image: hillamicro/noportal/gateway
+    build: portal-gateway
+    stop_signal: SIGINT
+    environment:
+      - EUREKA_SERVICE_URL=http://eureka:8761/eureka/
+    depends_on:
+      eureka:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+  microfrontend-a:
+    image: hillamicro/noportal/microfrontend-a
+    build: microfrontend-a
+    stop_signal: SIGINT
+    environment:
+      - EUREKA_SERVICE_URL=http://eureka:8761/eureka/
+      - HOME_PAGE_URL=http://localhost:8080/frontend-a/
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      eureka:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+  microfrontend-b:
+    image: hillamicro/noportal/microfrontend-b
+    build: microfrontend-b
+    stop_signal: SIGINT
+    environment:
+      - EUREKA_SERVICE_URL=http://eureka:8761/eureka/
+      - HOME_PAGE_URL=http://localhost:8080/frontend-b/
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      eureka:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
