@@ -6,6 +6,11 @@ spring:
       additional-exclude: dev/hilla/openapi.json
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KC_ISSUER_URI:http://host.docker.internal:8081/realms/hillamicro}
 server:
   port: ${PORT:8084}
   servlet:
@@ -13,10 +18,10 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+      defaultZone: ${EUREKA_SERVICE_URL:http://host.docker.internal:8761/eureka/}
   instance:
     metadata-map:
       frontend.title: Frontend B
-    home-page-url: ${HOME_PAGE_URL:http://localhost:8080/frontend-b/}
+    home-page-url: ${HOME_PAGE_URL:http://host.docker.internal:8080/frontend-b/}
 vaadin:
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla

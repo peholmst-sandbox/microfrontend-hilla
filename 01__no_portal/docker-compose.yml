@@ -2,10 +2,20 @@ version: "3.9"
 services:
   rabbitmq:
     image: rabbitmq:3
+    ports:
+      - "5672:5672"
+  keycloak:
+    image: hillamicro/noportal/keycloak
+    build: keycloak
+    stop_signal: SIGINT
+    ports:
+      - "8081:8080"
   eureka:
     image: hillamicro/noportal/eureka
     build: ../eureka-app
     stop_signal: SIGINT
+    ports:
+      - "8761:8761"
   gateway:
     image: hillamicro/noportal/gateway
     build: portal-gateway
@@ -15,6 +25,8 @@ services:
     depends_on:
       eureka:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     ports:
       - "8080:8080"
   microfrontend-a:
@@ -23,7 +35,6 @@ services:
     stop_signal: SIGINT
     environment:
       - EUREKA_SERVICE_URL=http://eureka:8761/eureka/
-      - HOME_PAGE_URL=http://localhost:8080/frontend-a/
       - RABBITMQ_HOST=rabbitmq
     depends_on:
       eureka:
@@ -36,7 +47,6 @@ services:
     stop_signal: SIGINT
     environment:
       - EUREKA_SERVICE_URL=http://eureka:8761/eureka/
-      - HOME_PAGE_URL=http://localhost:8080/frontend-b/
       - RABBITMQ_HOST=rabbitmq
     depends_on:
       eureka:

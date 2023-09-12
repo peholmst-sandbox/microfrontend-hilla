@@ -7,11 +7,16 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaServiceInstance;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import reactor.core.publisher.Flux;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Endpoint
 @AnonymousAllowed
@@ -72,5 +77,18 @@ public class PortalShellEndpoint {
 
     public @Nonnull Flux<@Nonnull FrontendNotification> getNotifications() {
         return frontendNotificationReceiver.notifications();
+    }
+
+    public @Nonnull PortalUser getUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(this::authenticationToPortalUser)
+                .orElseThrow(() -> new AccessDeniedException("No current user"));
+    }
+
+    private PortalUser authenticationToPortalUser(Authentication authentication) {
+        if (authentication instanceof JwtAuthenticationToken jwt) {
+            return new PortalUser(Optional.ofNullable((String) jwt.getTokenAttributes().get("preferred_username")).orElse(authentication.getName()));
+        }
+        return new PortalUser(authentication.getName());
     }
 }

@@ -9,6 +9,9 @@ spring:
         wiretap: true
       default-filters:
         - RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,
+        - TokenRelay=
+        - RemoveResponseHeader=Set-Cookie
+        - RemoveRequestHeader=Cookie
       discovery:
         locator:
           enabled: true
@@ -26,11 +29,31 @@ spring:
         enabled: true
       x-forwarded:
         enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KC_CLIENT_ID:portal-gateway}
+            client-secret: ${KC_CLIENT_SECRET:9cppLAVT3HalnD09EPIJfBtqsHAl71PW}
+            scope:
+              - openid
+            authorization-grant-type: authorization_code
+            redirect-uri: ${KC_REDIRECT_URI:http://host.docker.internal:8080/login/oauth2/code/keycloak}
+        provider:
+          keycloak:
+            issuer-uri: ${KC_ISSUER_URI:http://host.docker.internal:8081/realms/hillamicro}
+            user-name-attribute: preferred_username
 server:
   port: ${PORT:8080}
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+      defaultZone: ${EUREKA_SERVICE_URL:http://host.docker.internal:8761/eureka/}
     register-with-eureka: false
+logging:
+  level:
+    "[org.springframework.cloud.gateway]": INFO
+    "[reactor.netty]": INFO
+    "[org.springframework.security]": INFO
 

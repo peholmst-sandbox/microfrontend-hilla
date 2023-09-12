@@ -1,0 +1,49 @@
+{
+  "realm": "hillamicro",
+  "enabled": true,
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123!"
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "User privileges"
+      },
+      {
+        "name": "admin",
+        "description": "Administrator privileges"
+      }
+    ]
+  },
+  "defaultRoles": [
+    "user"
+  ],
+  "clients": [
+    {
+      "clientId": "portal-gateway",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "9cppLAVT3HalnD09EPIJfBtqsHAl71PW",
+      "redirectUris": [
+        "http://host.docker.internal:8080/login/oauth2/code/keycloak"
+      ],
+      "webOrigins": [
+        "http://host.docker.internal:8080"
+      ],
+      "protocol": "openid-connect"
+    }
+  ]
+}

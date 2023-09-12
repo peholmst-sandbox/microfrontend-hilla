@@ -7,6 +7,7 @@ import {Notification} from '@hilla/react-components/Notification.js';
 
 import {PortalShellEndpoint} from 'Frontend/generated/endpoints.js';
 import Frontend from 'Frontend/generated/org/vaadin/petter/hillamicro/portal/shell/endpoint/Frontend';
+import PortalUser from 'Frontend/generated/org/vaadin/petter/hillamicro/portal/shell/endpoint/PortalUser';
 import FrontendNotification
     from 'Frontend/generated/org/vaadin/petter/hillamicro/portal/shell/endpoint/FrontendNotification';
 
@@ -21,15 +22,15 @@ export default function PortalShell(props: PortalShellProps) {
     const [selfFrontendId, setSelfFrontendId] = useState("");
     const [subscription, setSubscription] = useState<Subscription<FrontendNotification> | undefined>();
     const [notification, setNotification] = useState<FrontendNotification | undefined>();
+    const [user, setUser] = useState<PortalUser | undefined>();
 
     useEffect(() => {
         PortalShellEndpoint.getSelf().then(self => {
             setSelfFrontendId(self.frontendId);
             console.log(`Setting window name to ${self.frontendId}`);
             window.name = self.frontendId;
-            PortalShellEndpoint.getFrontends().then(frontends => {
-                setFrontends(frontends);
-            });
+            PortalShellEndpoint.getFrontends().then(frontends => setFrontends(frontends));
+            PortalShellEndpoint.getUser().then(user => setUser(user));
         });
         setSubscription(PortalShellEndpoint.getNotifications().onNext((notification) => {
             setNotification(notification);
@@ -54,7 +55,7 @@ export default function PortalShell(props: PortalShellProps) {
             <AppLayout>
                 <DrawerToggle slot="navbar"></DrawerToggle>
                 <h3 slot="navbar">
-                    {props.title}
+                    {props.title} ({user?.username})
                 </h3>
                 <VerticalLayout slot="drawer" theme={"spacing padding"}>
                     {frontends.map(frontend => (
