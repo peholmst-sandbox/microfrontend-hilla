@@ -25,3 +25,9 @@ eureka:
     home-page-url: ${HOME_PAGE_URL:http://host.docker.internal:8080/frontend-a/}
 vaadin:
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla
+logging:
+  level:
+    "[org.springframework.security]": info
+    "[org.springframework.web]": info
+    "[com.vaadin]": info
+    "[org.atmosphere]": info

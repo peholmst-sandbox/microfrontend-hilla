@@ -10,8 +10,6 @@ spring:
       default-filters:
         - RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,
         - TokenRelay=
-        - RemoveResponseHeader=Set-Cookie
-        - RemoveRequestHeader=Cookie
       discovery:
         locator:
           enabled: true
